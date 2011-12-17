@@ -57,13 +57,13 @@ pickMatching :: Hand -> [[Card]]
 pickMatching hand = pickCases (hand ==)
 
 
-testcase h = 
-  show h ~: 
+testcase h =
+  show h ~:
   do
     assertBool "trueCases"  (all (\c -> checkHand c == h) $ pickMatching h)
     assertBool "falseCases" (all (not . (\c -> checkHand c == h)) $ pickNonMatching h)
 
-tests = test [map testcase [RoyalFlush, StraightFlush, FourOfKind, 
+tests = test [map testcase [RoyalFlush, StraightFlush, FourOfKind,
                             FullHouse, Flush, Straight, ThreeOfKind,
                             TwoPairs, Pair, HighCard]]
 
