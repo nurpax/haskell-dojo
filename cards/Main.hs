@@ -1,4 +1,6 @@
 
+import Data.List
+
 data Suit = Hearts | Spades | Diamonds | Clubs
     deriving (Show, Eq, Ord)
 
@@ -29,6 +31,13 @@ twoPairs = [spades 14, dmnds 7, spades 7, dmnds 4, clubs 4]
 pair = [hearts 8, clubs 12, spades 14, clubs 1, hearts 1]
 
 highCard = [hearts 4, spades 5, dmnds 8, dmnds 8, hearts 14]
+
+allSame :: (Eq a, Eq b) => (a -> b) -> [a] -> Bool
+allSame f (c:cs) = all (\e -> f c == f e) cs
+allSame _ [] = False
+
+checkRoyalFlush cards =
+  allSame suit cards && (sort . map value $ cards) == [10..14]
 
 main = do
   putStrLn "foo"
