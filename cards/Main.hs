@@ -6,7 +6,7 @@ import System.Exit
 data Suit = Hearts | Spades | Diamonds | Clubs
     deriving (Show, Eq, Ord)
 
-data Card = Card { suit :: Suit, value :: Int } | Joker
+data Card = Card { suit :: Suit, rank :: Int } | Joker
     deriving (Show, Eq, Ord)
 
 hearts = Card Hearts
@@ -43,13 +43,13 @@ sameSuit = allSame suit
 
 checkRoyalFlush :: [Card] -> Bool
 checkRoyalFlush cards =
-  sameSuit cards && (sort . map value $ cards) == [10..14]
+  sameSuit cards && (sort . map rank $ cards) == [10..14]
 
 checkStraightFlush :: [Card] -> Bool
 checkStraightFlush cards =
-  sameSuit cards && (sort . map (subtract minVal . value) $ cards) == [0..4]
+  sameSuit cards && (sort . map (subtract minVal . rank) $ cards) == [0..4]
   where
-    minVal = minimum . map value $ cards
+    minVal = minimum . map rank $ cards
 
 -- list of 3-tuples where:
 --  1st = card hand check function
