@@ -1,5 +1,7 @@
 
 import Data.List
+import Control.Monad
+import System.Exit
 
 data Suit = Hearts | Spades | Diamonds | Clubs
     deriving (Show, Eq, Ord)
@@ -13,7 +15,6 @@ dmnds = Card Diamonds
 clubs = Card Clubs
 
 royalFlush = [dmnds 14, dmnds 13, dmnds 12, dmnds 11, dmnds 10]
-royalFlushJoker = [dmnds 14, Joker, dmnds 12, dmnds 11, dmnds 10]
 
 straightFlush = [clubs 9, clubs 8, clubs 7, clubs 6, clubs 5]
 
@@ -33,24 +34,39 @@ pair = [hearts 8, clubs 12, spades 14, clubs 1, hearts 1]
 
 highCard = [hearts 4, spades 5, dmnds 8, dmnds 8, hearts 14]
 
-compareCards :: Eq a => (Card -> a) -> Card -> Card -> Bool
-compareCards _ Joker _ = True
-compareCards _ _ Joker = True
-compareCards f a b = f a == f b
-
-compareSuits = compareCards suit
-compareValues = compareCards value
-
-allSame :: (Card -> Card -> Bool) -> [Card] -> Bool
-allSame f (c:cs) = all (`f` c) cs
+allSame :: Eq a => (Card -> a) -> [Card] -> Bool
+allSame f (c:cs) = all (\e -> f e == f c) cs
 allSame _ [] = False
 
-compareValue :: Int -> Card -> Bool
-compareValue _ Joker = True
-compareValue n card = value card == n
+sameSuit :: [Card] -> Bool
+sameSuit = allSame suit
 
+checkRoyalFlush :: [Card] -> Bool
 checkRoyalFlush cards =
-  allSame compareSuits cards && all (\val -> any (compareValue val) cards) [10..14]
+  sameSuit cards && (sort . map value $ cards) == [10..14]
 
-main = do
-  putStrLn "foo"
+checkStraightFlush :: [Card] -> Bool
+checkStraightFlush cards =
+  sameSuit cards && (sort . map (subtract minVal . value) $ cards) == [0..4]
+  where
+    minVal = minimum . map value $ cards
+
+-- list of 3-tuples where:
+--  1st = card hand check function
+--  2nd = hands that should return True
+--  3rd = hands that should return False
+testCases :: [([Card] -> Bool, [[Card]], [[Card]])]
+testCases = [(checkRoyalFlush, [royalFlush], [straightFlush, fourOfKind, fullHouse, flush, straight]),
+             (checkStraightFlush, [straightFlush], [fourOfKind, fullHouse, flush, straight])]
+
+reportTest :: ([Card] -> Bool) -> [[Card]] -> [[Card]] -> IO ()
+reportTest f trueCases falseCases =
+  mapM_ (test True) trueCases >> mapM_ (test False) falseCases
+    where
+      test expected c =
+        if f c == expected then putStrLn "OK"
+        else putStrLn "Test failed" >> exitFailure
+
+main :: IO ()
+main =
+  mapM_ (\(f, trueCases, falseCases) -> reportTest f trueCases falseCases) testCases
