@@ -9,6 +9,24 @@ data Suit = Hearts | Spades | Diamonds | Clubs
 data Card = Card { suit :: Suit, rank :: Int } | Joker
     deriving (Show, Eq, Ord)
 
+allSame :: Eq a => (Card -> a) -> [Card] -> Bool
+allSame f (c:cs) = all (\e -> f e == f c) cs
+allSame _ [] = False
+
+sameSuit :: [Card] -> Bool
+sameSuit = allSame suit
+
+checkRoyalFlush :: [Card] -> Bool
+checkRoyalFlush cards =
+  sameSuit cards && (sort . map rank $ cards) == [10..14]
+
+checkStraightFlush :: [Card] -> Bool
+checkStraightFlush cards =
+  sameSuit cards && (sort . map (subtract minVal . rank) $ cards) == [0..4]
+  where
+    minVal = minimum . map rank $ cards
+
+-- Test data
 hearts = Card Hearts
 spades = Card Spades
 dmnds = Card Diamonds
@@ -33,23 +51,6 @@ twoPairs = [spades 14, dmnds 7, spades 7, dmnds 4, clubs 4]
 pair = [hearts 8, clubs 12, spades 14, clubs 1, hearts 1]
 
 highCard = [hearts 4, spades 5, dmnds 8, dmnds 8, hearts 14]
-
-allSame :: Eq a => (Card -> a) -> [Card] -> Bool
-allSame f (c:cs) = all (\e -> f e == f c) cs
-allSame _ [] = False
-
-sameSuit :: [Card] -> Bool
-sameSuit = allSame suit
-
-checkRoyalFlush :: [Card] -> Bool
-checkRoyalFlush cards =
-  sameSuit cards && (sort . map rank $ cards) == [10..14]
-
-checkStraightFlush :: [Card] -> Bool
-checkStraightFlush cards =
-  sameSuit cards && (sort . map (subtract minVal . rank) $ cards) == [0..4]
-  where
-    minVal = minimum . map rank $ cards
 
 -- list of 3-tuples where:
 --  1st = card hand check function
