@@ -13,6 +13,7 @@ dmnds = Card Diamonds
 clubs = Card Clubs
 
 royalFlush = [dmnds 14, dmnds 13, dmnds 12, dmnds 11, dmnds 10]
+royalFlushJoker = [dmnds 14, Joker, dmnds 12, dmnds 11, dmnds 10]
 
 straightFlush = [clubs 9, clubs 8, clubs 7, clubs 6, clubs 5]
 
@@ -32,12 +33,24 @@ pair = [hearts 8, clubs 12, spades 14, clubs 1, hearts 1]
 
 highCard = [hearts 4, spades 5, dmnds 8, dmnds 8, hearts 14]
 
-allSame :: (Eq a, Eq b) => (a -> b) -> [a] -> Bool
-allSame f (c:cs) = all (\e -> f c == f e) cs
+compareCards :: Eq a => (Card -> a) -> Card -> Card -> Bool
+compareCards _ Joker _ = True
+compareCards _ _ Joker = True
+compareCards f a b = f a == f b
+
+compareSuits = compareCards suit
+compareValues = compareCards value
+
+allSame :: (Card -> Card -> Bool) -> [Card] -> Bool
+allSame f (c:cs) = all (`f` c) cs
 allSame _ [] = False
 
+compareValue :: Int -> Card -> Bool
+compareValue _ Joker = True
+compareValue n card = value card == n
+
 checkRoyalFlush cards =
-  allSame suit cards && (sort . map value $ cards) == [10..14]
+  allSame compareSuits cards && all (\val -> any (compareValue val) cards) [10..14]
 
 main = do
   putStrLn "foo"
