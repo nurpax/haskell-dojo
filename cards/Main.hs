@@ -1,6 +1,7 @@
 
+import Data.Function
 import Data.List
-import Control.Monad
+import Data.Ord
 import System.Exit
 
 data Suit = Hearts | Spades | Diamonds | Clubs
@@ -9,48 +10,81 @@ data Suit = Hearts | Spades | Diamonds | Clubs
 data Card = Card { suit :: Suit, rank :: Int } | Joker
     deriving (Show, Eq, Ord)
 
-allSame :: Eq a => (Card -> a) -> [Card] -> Bool
-allSame f (c:cs) = all (\e -> f e == f c) cs
-allSame _ [] = False
+data Hand =
+    RoyalFlush
+  | StraightFlush
+  | FourOfKind
+  | FullHouse
+  | Flush
+  | Straight
+  | ThreeOfKind
+  | TwoPairs
+  | Pair
+  | HighCard
+  deriving (Eq)
 
 sameSuit :: [Card] -> Bool
-sameSuit = allSame suit
+sameSuit (c:cs) = all (\e -> suit e == suit c) cs
+sameSuit _ = False
 
 checkRoyalFlush :: [Card] -> Bool
 checkRoyalFlush cards =
   sameSuit cards && (sort . map rank $ cards) == [10..14]
 
-checkStraightFlush :: [Card] -> Bool
-checkStraightFlush cards =
-  sameSuit cards && (sort . map (subtract minVal . rank) $ cards) == [0..4]
+checkStraight :: [Card] -> Bool
+checkStraight cards =
+  (sort . map (subtract minVal . rank) $ cards) == [0..4]
   where
     minVal = minimum . map rank $ cards
 
+checkFlush :: [Card] -> Bool
+checkFlush = sameSuit
+
+checkStraightFlush :: [Card] -> Bool
+checkStraightFlush cards =
+  checkFlush cards && checkStraight cards
+
+-- Check rank based hands
+checkRankPatterns :: [Card] -> Hand
+checkRankPatterns cards =
+  matchRankGroups (sortBy (comparing length) rankGroups) where
+    rankGroups = groupBy ((==) `on` rank) . sortBy (comparing rank) $ cards
+    matchRankGroups [[_], [_,_,_,_]] = FourOfKind
+    matchRankGroups [[_,_], [_,_,_]] = FullHouse
+    matchRankGroups [[_], [_,_], [_,_]] = TwoPairs
+    matchRankGroups [[_], [_], [_], [_,_]] = Pair
+    matchRankGroups _ = HighCard
+
+checkFourOfKind cards = checkRankPatterns cards == FourOfKind
+checkFullHouse cards = checkRankPatterns cards == FullHouse
+checkTwoPairs cards = checkRankPatterns cards == TwoPairs
+checkPair cards = checkRankPatterns cards == Pair
+
 -- Test data
-hearts = Card Hearts
-spades = Card Spades
-dmnds = Card Diamonds
-clubs = Card Clubs
+h = Card Hearts
+s = Card Spades
+d = Card Diamonds
+c = Card Clubs
 
-royalFlush = [dmnds 14, dmnds 13, dmnds 12, dmnds 11, dmnds 10]
+royalFlush    = [d 14, d 13, d 12, d 11, d 10]
 
-straightFlush = [clubs 9, clubs 8, clubs 7, clubs 6, clubs 5]
+straightFlush = [c 9, c 8, c 7, c 6, c 5]
 
-fourOfKind = [spades 1, clubs 3, dmnds 3, spades 3, hearts 3]
+fourOfKind    = [s 1, c 3, d 3, s 3, h 3]
 
-fullHouse = [spades 2, dmnds 2, clubs 2, spades 9, dmnds 9]
+fullHouse     = [s 2, d 2, c 2, s 9, d 9]
 
-flush = [hearts 2, hearts 5, hearts 6, hearts 9, hearts 13]
+flush         = [h 2, h 5, h 6, h 9, h 13]
 
-straight = [hearts 4, dmnds 5, spades 6, hearts 7, spades 8]
+straight      = [h 4, d 5, s 6, h 7, s 8]
 
-threeOfKind = [hearts 12, clubs 13, clubs 10, hearts 10, spades 10]
+threeOfKind   = [h 12, c 13, c 10, h 10, s 10]
 
-twoPairs = [spades 14, dmnds 7, spades 7, dmnds 4, clubs 4]
+twoPairs      = [s 14, d 7, s 7, d 4, c 4]
 
-pair = [hearts 8, clubs 12, spades 14, clubs 1, hearts 1]
+pair          = [h 8, c 12, s 14, c 1, h 1]
 
-highCard = [hearts 4, spades 5, dmnds 8, dmnds 8, hearts 14]
+highCard      = [h 4, s 5, d 8, d 8, h 14]
 
 -- list of 3-tuples where:
 --  1st = card hand check function
@@ -58,14 +92,21 @@ highCard = [hearts 4, spades 5, dmnds 8, dmnds 8, hearts 14]
 --  3rd = hands that should return False
 testCases :: [([Card] -> Bool, [[Card]], [[Card]])]
 testCases = [(checkRoyalFlush, [royalFlush], [straightFlush, fourOfKind, fullHouse, flush, straight]),
-             (checkStraightFlush, [straightFlush], [fourOfKind, fullHouse, flush, straight])]
+             (checkStraightFlush, [straightFlush], [fourOfKind, fullHouse, flush, straight]),
+             (checkFourOfKind, [fourOfKind], [twoPairs, fullHouse]),
+             (checkFullHouse, [fullHouse], [royalFlush, fourOfKind, flush, straightFlush, pair]),
+             (checkFlush, [flush, royalFlush, straightFlush], [twoPairs, threeOfKind]),
+             (checkStraight, [straight], [twoPairs, fullHouse, fourOfKind, threeOfKind, pair]),
+             (checkTwoPairs, [twoPairs], [royalFlush, fourOfKind, fullHouse, flush, straightFlush, pair]),
+             (checkPair, [pair], [twoPairs, royalFlush, fourOfKind, fullHouse, flush, straightFlush])
+             ]
 
 reportTest :: ([Card] -> Bool) -> [[Card]] -> [[Card]] -> IO ()
 reportTest f trueCases falseCases =
   mapM_ (test True) trueCases >> mapM_ (test False) falseCases
     where
       test expected c =
-        if f c == expected then putStrLn "OK"
+        if f c == expected then putStr "OK "
         else putStrLn "Test failed" >> exitFailure
 
 main :: IO ()
