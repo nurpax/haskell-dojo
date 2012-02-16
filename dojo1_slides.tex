@@ -1,0 +1,280 @@
+\documentclass{beamer}
+
+\usepackage{verbatim}
+
+\title{Haskell Dojo 1}
+\subtitle{A tour of Haskell}
+\date{\today}
+\author{Riku Salminen}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+\frametitle{Haskell Dojo}
+
+\begin{itemize}
+\item A quick tour of Haskell, not an in-depth course
+\item Three parts: expressions, types and imperative programming
+\item Learning by example and by trying it out
+\item So let's get started with GHCi!
+\item In your favorite text editor, type:
+\end{itemize}
+
+\begin{figure}[h!]
+\caption{hellohaskell.hs}
+\begin{verbatim}
+main = putStrLn "Hello Haskell!"
+\end{verbatim}
+\end{figure}
+
+\begin{itemize}
+\item run: \verb+ghci hellohaskell.hs+
+\item \verb :load  and \verb :reload .
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Homework}
+
+\begin{itemize}
+\item Homework: 5 card draw poker
+\item Homework review workshop in a few weeks
+\item NOTE: Get shuffle from Haskell wiki
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Haskell lexical structure}
+
+\begin{itemize}
+\item Whitespace sensitive indentation (like Python)
+\item Identifiers lower camel case: \verb foo123 , \verb scarlettO'Hara , \verb x'' .
+\item Modules and types upper camel: \verb Integer , \verb+Set Integer+, \verb Main .
+\item Infix operators: \verb|+|, \verb|++|, \verb|==|, \verb|/=|, \verb|>>=|
+\item Inline comment: \verb|x = 13  -- this is a comment|
+\item Block comment: \verb|{- This is a multi-line comment -}|
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Haskell expressions}
+
+\begin{itemize}
+\item Function application: \verb|mod 7 2|
+\item Infix expressions: \verb|x + y * z|
+\item Application binds tightest: \verb|mod (x+1) 32 /= 0|
+\item Conditional: \verb|if mod x 2 /= 0 then "Odd" else "Even"|
+\item \verb if  is an expression (like \verb|x ? y : z|), not a statement
+\item There's no \verb elseif , use guard syntax instead!
+\item \verb|let x = 42 in mod x 12|
+\item \verb|mod x 12 where x = 42|
+\item $\lambda$ -functions: \verb|\x y -> x + y|
+\item Typing hints: \verb|read "123" :: Integer|
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Haskell functions}
+
+\begin{itemize}
+\item Type these in a Haskell file, not GHCi!
+\item Ex. multiply and add: \verb|mad a b c = a + b * c|
+\item Same with $\lambda$ expression: \verb|mad = \a b c -> a + b * c|
+\item Many definitions with pattern matching:
+\end{itemize}
+
+\begin{verbatim}
+pow _ 0 = 1
+pow x y =
+    if mod y 2 == 0
+        then square (pow x (div y 2))
+        else x * pow x (y-1)
+    where
+    square x = x * x
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Haskell function magic}
+
+\begin{itemize}
+\item Function application: \verb|f $ x + 1| equals \verb|f (x+1)|
+\item Function composition $(f \circ g) (x)$: \verb|(f . g) x| equals \verb|f (g x)|
+\item Idiomatic way: \verb|square . pow x . flip div 2 $ y|
+\item Partial application: \verb|powerOfTwo = pow 2|
+\item Would you like some Curry with your code?
+\item See also: \verb curry , \verb uncurry .
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Haskell types}
+
+\begin{itemize}
+\item Haskell is statically typed with type inference.
+\item Compiler "guesses" types, gives errors on ambiguity
+\item Sum types implemented with tagged unions
+\item \verb+data Passenger = Person String Int | Animal Int+ .
+\end{itemize}
+
+\begin{verbatim}
+describePassenger passenger =
+    case passenger of
+        (Person name age) -> name ++ ", age: " ++ show age
+        (Animal weight) -> "Animal weight: " ++ weight
+
+describePassenger (Person name age) =
+    name ++ ", age: " ++ show age
+describePassenger (Animal weight) =
+    "Animal weight: " ++ weight
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Built-in types}
+
+\begin{itemize}
+\item Integers: \verb Integer , \verb Int , \verb Word16 .
+\item Functions: \verb|Int -> Int -> Bool|
+\item Tuples: \verb+("Spam", 13) :: (String, Int)+
+\item Lists: \verb+[13, 42, 12] :: [Integer]+
+\item \verb+String+'s are lists of \verb+Char+'s.
+\item \verb+[("Spam", 13), ("Eggs", 42)] :: [(String, Int)]+
+\item Lots of excellent data structures in standard library:
+\item \verb+import qualified Data.Map as Map+
+\item \verb+import qualified Data.Set as Set+
+\item Load modules in GHCi: \verb|:m +Data.Map|
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Advanced types}
+
+\begin{itemize}
+\item Data types can be recursive
+\item \verb+data List a = Cons a (List a) | Nil+
+\item \verb+data Tree a = Branch (Tree a) (Tree a) | Leaf a+
+\item A more complete example:
+\end{itemize}
+
+\begin{verbatim}
+data Suit = Hearts | Spades | Diamonds | Clubs 
+    deriving (Show, Eq, Ord)
+
+data Card =
+    Card { suit :: Suit, value :: Int } |
+    Joker
+    deriving (Show, Eq, Ord)
+\end{verbatim}
+
+\begin{itemize}
+\item \verb+Show, Eq, Ord+ are type classes: showable, equality comparable and ordered.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Fun with lists}
+
+\begin{itemize}
+\item Tail recursion modulo cons
+\end{itemize}
+
+\begin{verbatim}
+plus1 list =
+    if null list  -- null means List.isEmpty
+        then []
+        else ((head list) + 1) : plus1 (tail list)
+
+plus1 [] = []
+plus1 (x:xs) = (x+1) : plus1 xs
+\end{verbatim}
+
+\begin{itemize}
+\item Somewhat unwieldy. That's why there's \verb map , \verb filter , \verb foldl .
+\item \verb|map (+1) [1, 2, 3]| equals \verb|[2, 3, 4]|.
+\item \verb|filter even [1..10]| equals \verb|[2,4,6,8,10]|.
+\item \verb|foldl max 0 [5, 11, 1, 13, 2]| equals \verb|13|.
+\item "Sum of squares of odd natural numbers less than 100"
+\item \verb|foldl (+) 0 . map (^2) . filter odd $ [1..100]|
+\item \verb+sum [x*x | x <- [1..100], odd x]+
+\end{itemize}
+
+\begin{verbatim}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Imperative programming}
+
+\begin{itemize}
+\item Haskell has "first class statements". Statements are expressions, \textbf{not} the other way.
+\item \verb do  is syntactic sugar for composing sequential statements
+\item Compiler transforms to concrete notation using \verb >>= .
+\item \verb|return 13|
+\item \verb|let x = 13|
+\item \verb|content <- readFile "/etc/hostname"|
+\item \verb|do { line <- getLine ; putStrLn line }| equals \verb|getLine >>= \line -> putStrLn line| equals \verb|getLine >>= putStrLn|.
+\item In GHCi, you're inside a \verb|do| block. "Fixed" in latest version.
+\item A monad is a monoid in the category of endofunctors, what's the problem?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Guess the number}
+\begin{verbatim}
+doGuess :: Int -> Int -> IO Bool
+doGuess _ 0 = return False
+doGuess answer attempts = do
+    line <- getLine
+    let guess = read line
+    if guess == answer
+        then return True
+        else do
+            putStrLn (if guess < answer then "Lo" else "Hi")
+            doGuess answer (attempts-1)
+
+main :: IO ()
+main = do
+    answer <- randomRIO (1, 10)
+    result <- doGuess answer 3
+    putStrLn $ "You " ++ (if result then "Win" else "Lose")
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Mutable variables}
+
+\begin{itemize}
+\item Haskell has mutable variables, but they're not used often
+\item Different types of variables with different kinds of semantics
+\item The regular kind of variable is called \verb IORef  (\verb|Data.IORef|).
+\item Create a new variable: \verb|var <- newIORef 13|
+\item Write value: \verb|writeIORef var 42|
+\item Read value: \verb|x <- readIORef var|
+\item See also \verb modifyIORef  and \verb atomicModifyIORef .
+\item Other kinds of variables: \verb MVar  (safe concurrent access), \verb TVar  (software transactional memory), \verb STRef  (inside pure code).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Roadmap}
+
+\begin{itemize}
+\item Next workshop in about a month
+\item Parsing with Parsec
+\item Concurrency with forkIO
+\item Real World Haskell with examples (MickiBot 2.0)
+\end{itemize}
+\end{frame}
+
+\end{document}

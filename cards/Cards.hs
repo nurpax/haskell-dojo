@@ -59,17 +59,12 @@ checkRankPatterns cards =
 checkFourOfKind cards = checkRankPatterns cards == FourOfKind
 checkFullHouse cards = checkRankPatterns cards == FullHouse
 
--- This is somewhat abusive of the Either monad in the sense that
--- implement short-circuiting but in the other direction.  The first
--- match returns Left immediately.
 checkHand :: [Card] -> Hand
-checkHand cards =
-  matchCards
-  where
-    matchCards | checkRoyalFlush cards = RoyalFlush
-               | checkStraightFlush cards = StraightFlush
-               | checkFourOfKind cards = FourOfKind
-               | checkFullHouse cards = FullHouse
-               | checkFlush cards = Flush
-               | checkStraight cards = Straight
-               | otherwise = checkRankPatterns cards
+checkHand cards
+  | checkRoyalFlush cards = RoyalFlush
+  | checkStraightFlush cards = StraightFlush
+  | checkFourOfKind cards = FourOfKind
+  | checkFullHouse cards = FullHouse
+  | checkFlush cards = Flush
+  | checkStraight cards = Straight
+  | otherwise = checkRankPatterns cards
