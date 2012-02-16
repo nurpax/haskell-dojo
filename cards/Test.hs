@@ -23,6 +23,7 @@ flushS        = [s 2, s 5, s 6, s 9, s 13]
 
 straight      = [h 4, d 5, s 6, h 7, s 8]
 straightD     = [d 1, d 2, s 3, d 4, h 5]
+straightHi    = [s 10, d 11, d 12, h 13, s 1]
 
 threeOfKind   = [h 12, c 10, c 13, h 10, s 10]
 
@@ -42,6 +43,7 @@ expectedHands =
    (Flush, flushS),
    (Straight, straight),
    (Straight, straightD),
+   (Straight, straightHi),
    (TwoPairs, twoPairs),
    (Pair, pair)
    ]
