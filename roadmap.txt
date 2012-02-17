@@ -1,0 +1,24 @@
+
+Ideas for upcoming dojos
+------------------------
+
+Parsec:
+
+- json parser
+
+Concurrency:
+
+- forkIO
+
+Real World Haskell:
+
+(IO, db, bigger programs)
+
+- IRC bot based on Haskell Wiki's template
+- SQLite
+- JSON parser
+- HXT
+
+Monads:
+
+- ?
