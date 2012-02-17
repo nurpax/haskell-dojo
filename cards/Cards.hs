@@ -28,15 +28,18 @@ sameSuit :: [Card] -> Bool
 sameSuit (c:cs) = all (\e -> suit e == suit c) cs
 sameSuit _ = False
 
+checkHighStraight :: [Card] -> Bool
+checkHighStraight cards = (sort $ map rank cards) == 1:[10..13]
+
 checkRoyalFlush :: [Card] -> Bool
 checkRoyalFlush cards =
-  sameSuit cards && (sort $ map rank cards) == 1:[10..13]
+  sameSuit cards && checkHighStraight cards
 
 checkStraight :: [Card] -> Bool
 checkStraight cards =
-  sort [rank c - minVal | c <- cards] == [0..4]
+  sort [rank c - lo | c <- cards] == [0..4] || checkHighStraight cards
   where
-    minVal = minimum $ map rank cards
+    lo = minimum $ map rank cards
 
 checkFlush :: [Card] -> Bool
 checkFlush = sameSuit
