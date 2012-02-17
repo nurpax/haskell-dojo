@@ -30,13 +30,13 @@ sameSuit _ = False
 
 checkRoyalFlush :: [Card] -> Bool
 checkRoyalFlush cards =
-  sameSuit cards && (sort . map rank $ cards) == 1:[10..13]
+  sameSuit cards && (sort $ map rank cards) == 1:[10..13]
 
 checkStraight :: [Card] -> Bool
 checkStraight cards =
-  (sort . map (subtract minVal . rank) $ cards) == [0..4]
+  sort [rank c - minVal | c <- cards] == [0..4]
   where
-    minVal = minimum . map rank $ cards
+    minVal = minimum $ map rank cards
 
 checkFlush :: [Card] -> Bool
 checkFlush = sameSuit
