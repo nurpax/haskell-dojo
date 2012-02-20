@@ -18,6 +18,8 @@ Real World Haskell:
 - SQLite
 - JSON parser
 - HXT
+- Regex (what's installed by default on haskell platform)
+  * when to use (instead of say parsec), when not to use
 
 Monads:
 
