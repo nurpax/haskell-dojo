@@ -1,50 +1,106 @@
 \documentclass{beamer}
+\usepackage{hyperref}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
 
 \usepackage{verbatim}
 
-\title{Haskell Dojo 1}
-\subtitle{A tour of Haskell}
+\title{Haskell Dojo 2}
+\subtitle{Taking it to practice}
 \date{\today}
-\author{Riku Salminen}
+\author{Janne Haskell}
 
 \begin{document}
 
 \frame{\titlepage}
 
+%-----------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Haskell Dojo}
+
+\frametitle{Haskell Dojo 2}
+
+We will incrementally work on an example project that demonstrates:
 
 \begin{itemize}
-\item A quick tour of Haskell, not an in-depth course
-\item Three parts: expressions, types and imperative programming
-\item Learning by example and by trying it out
-\item So let's get started with GHCi!
-\item In your favorite text editor, type:
+  \item Basic project setup and compilation
+  \item Parsing JSON
+  \item I/O (working in the IO monad, networking)
+  \item Monad basics
+  \item Handling state in a pure language (game state, state monad)
 \end{itemize}
 
-\begin{figure}[h!]
-\caption{hellohaskell.hs}
-\begin{verbatim}
-main = putStrLn "Hello Haskell!"
-\end{verbatim}
-\end{figure}
-
-\begin{itemize}
-\item run: \verb+ghci hellohaskell.hs+
-\item \verb :load  and \verb :reload .
-
-\end{itemize}
 \end{frame}
+%-----------------------------------------------------------------
 
 \begin{frame}[fragile]
-\frametitle{Roadmap}
+\frametitle{Resources}
+
+Links:
 
 \begin{itemize}
-\item Next workshop in about a month
-\item Parsing with Parsec
-\item Concurrency with forkIO
-\item Real World Haskell with examples (MickiBot 2.0)
+  \item \href{https://github.com/nurpax/haskell-dojo/wiki/Haskell-Dojo-\%232}{Dojo wiki}
+  \item \href{http://www.haskell.org/haskellwiki/How_to_write_a_Haskell_program}{Excellent starter guide}
 \end{itemize}
+
 \end{frame}
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+
+\frametitle{Today}
+
+Today we will practice:
+
+\begin{itemize}
+  \item How to setup and build a Haskell project
+  \item How to parse JSON
+\end{itemize}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+
+\frametitle{Project setup}
+
+Haskell projects are built using {\em cabal}
+
+\begin{itemize}
+  \item Think ``make'' for Haskell
+  \item Your project details are declared with a {\em .cabal} file.
+\end{itemize}
+
+A {\em .cabal} file contains:
+\begin{itemize}
+  \item What source files make up your project
+  \item What libraries are you linking against
+  \item ..plus other stuff which you can mostly just copy\&paste over
+\end{itemize}
+
+% TODO move to a later slide?
+\medskip
+See the Haskell wiki on \href{http://www.haskell.org/haskellwiki/How_to_write_a_Haskell_program}{How
+  to write a Haskell program} for a more comprehensive guide.
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+
+\frametitle{Project setup, cont'd}
+
+Haskell projects are built using {\em cabal}
+
+\begin{itemize}
+  \item Think ``make'' for Haskell
+  \item Your project details are declared with a {\em .cabal} file.
+\end{itemize}
+
+\end{frame}
+%-----------------------------------------------------------------
 
 \end{document}
