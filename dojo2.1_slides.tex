@@ -135,7 +135,7 @@ $ diff -u test-project.cabal.orig test-project.cabal
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Interactive - let's try it}
+\frametitle{Interactive - build and run}
 
 Your example project is now ready to be built:
 
@@ -151,5 +151,51 @@ Hello world from Haskell
 \end{verbatim}
 
 \end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Creating another module}
+
+Anything more complex than a ``hello world'' world app will have more
+than one module.  So let's try creating another module called {\em Types}.
+
+\bigskip
+Add a new file \verb+src/Types.hs+ with the following in it:
+
+\begin{verbatim}
+module Types (
+    Suit(..)
+  ) where
+
+data Suit = Hearts | Spades | Diamonds | Clubs
+    deriving (Show, Eq, Ord)
+\end{verbatim}
+
+\end{frame}
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Using the {\em Types} module}
+
+Let's use the new module in your \verb+Main+ module.  Replace your \verb+src/Main.hs+ with this:
+
+\begin{verbatim}
+import Types
+
+main :: IO ()
+main = print Hearts
+\end{verbatim}
+
+Try running it:
+
+\begin{verbatim}
+$ cabal build
+$ ./dist/build/test-project/test-project
+Hearts
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
 
 \end{document}
