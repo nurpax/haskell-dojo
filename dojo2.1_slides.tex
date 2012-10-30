@@ -90,17 +90,66 @@ See the Haskell wiki on \href{http://www.haskell.org/haskellwiki/How_to_write_a_
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
+\frametitle{Interactive - let's try it}
 
-\frametitle{Project setup, cont'd}
+Let's create an executable project with source code under \verb|src/|
+\medskip
 
-Haskell projects are built using {\em cabal}
+Run the below and respond to the interactive prompts:
 
-\begin{itemize}
-  \item Think ``make'' for Haskell
-  \item Your project details are declared with a {\em .cabal} file.
-\end{itemize}
+\begin{verbatim}
+mkdir test-project  # do not use underscore here!
+cd test-project
+mkdir src
+cabal init -m
+\end{verbatim}
+
+Create a source file \verb|src/Main.hs| with contents:
+
+\begin{verbatim}
+main :: IO ()
+main = putStrLn "Hello world from Haskell"
+\end{verbatim}
 
 \end{frame}
 %-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Interactive - let's try it}
+Let cabal know which module contains your \verb+main+ by editing the .cabal file:
+
+\begin{verbatim}
+$ diff -u test-project.cabal.orig test-project.cabal
+--- test-project.cabal.orig     Tue Oct 30 20:36:16 2012
++++ test-project.cabal  Tue Oct 30 20:35:38 2012
+@@ -9,4 +9,5 @@
+
+ executable test-project
+   build-depends:       base ==4.5.*
++  main-is:             Main.hs
+   hs-source-dirs:      src
+\end{verbatim}
+
+\end{frame}
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Interactive - let's try it}
+
+Your example project is now ready to be built:
+
+\begin{verbatim}
+cabal configure
+cabal build
+\end{verbatim}
+
+To run it:
+\begin{verbatim}
+$ ./dist/build/test-project/test-project
+Hello world from Haskell
+\end{verbatim}
+
+\end{frame}
 
 \end{document}
