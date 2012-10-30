@@ -1,0 +1,50 @@
+\documentclass{beamer}
+
+\usepackage{verbatim}
+
+\title{Haskell Dojo 1}
+\subtitle{A tour of Haskell}
+\date{\today}
+\author{Riku Salminen}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+\frametitle{Haskell Dojo}
+
+\begin{itemize}
+\item A quick tour of Haskell, not an in-depth course
+\item Three parts: expressions, types and imperative programming
+\item Learning by example and by trying it out
+\item So let's get started with GHCi!
+\item In your favorite text editor, type:
+\end{itemize}
+
+\begin{figure}[h!]
+\caption{hellohaskell.hs}
+\begin{verbatim}
+main = putStrLn "Hello Haskell!"
+\end{verbatim}
+\end{figure}
+
+\begin{itemize}
+\item run: \verb+ghci hellohaskell.hs+
+\item \verb :load  and \verb :reload .
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Roadmap}
+
+\begin{itemize}
+\item Next workshop in about a month
+\item Parsing with Parsec
+\item Concurrency with forkIO
+\item Real World Haskell with examples (MickiBot 2.0)
+\end{itemize}
+\end{frame}
+
+\end{document}
