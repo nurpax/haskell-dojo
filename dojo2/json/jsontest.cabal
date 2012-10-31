@@ -1,0 +1,16 @@
+name:                jsontest
+version:             0.1.0.0
+synopsis:            json examples
+license-file:        LICENSE
+author:              Janne Hellsten
+maintainer:          jjhellst@gmail.com
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable jsontest
+  build-depends:       base ==4.5.*
+                     , containers
+                     , parsec
+
+  hs-source-dirs:      src
+  main-is:             Main.hs
