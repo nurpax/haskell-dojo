@@ -24,7 +24,7 @@ integer = Token.integer lexer
 
 data JSON =
     JSONFloat Double
-  | JSONInt Integer
+  | JSONInt Int
   | JSONString String
   | JSONDict (Map.Map String JSON)
   | JSONList [JSON]
@@ -32,7 +32,7 @@ data JSON =
 
 json =
   fmap JSONFloat (try float) <|>
-  fmap JSONInt (integer) <|>
+  fmap JSONInt (fmap fromIntegral integer) <|>
   fmap JSONString (identifier <|> stringLiteral) <|>
   fmap (JSONDict . Map.fromList) (braces . commaSep $ pair) <|>
   fmap JSONList (brackets . commaSep $ json)
