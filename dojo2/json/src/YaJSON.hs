@@ -1,10 +1,14 @@
 
-module YaJSON where
+module YaJSON (
+    JSON(..)
+  , parseJson
+  ) where
 
 import Text.Parsec
 import qualified Text.Parsec.Token as Token
 import qualified Text.Parsec.Language as Language
 import qualified Data.Map as Map
+import           Text.ParserCombinators.Parsec (parse, ParseError)
 
 language = Language.javaStyle
 lexer = Token.makeTokenParser language
@@ -22,7 +26,7 @@ data JSON =
     JSONFloat Double
   | JSONInt Integer
   | JSONString String
-  | JSONDict (Map.Map JSON JSON)
+  | JSONDict (Map.Map String JSON)
   | JSONList [JSON]
     deriving (Eq, Ord, Show)
 
@@ -34,7 +38,11 @@ json =
   fmap JSONList (brackets . commaSep $ json)
   where
     pair = do
-      l <- json
+      -- TODO how to handle mismatch better here
+      JSONString l <- json
       reservedOp ":"
       r <- json
       return (l, r)
+
+parseJson :: String -> Either ParseError JSON
+parseJson s = parse json "" s
