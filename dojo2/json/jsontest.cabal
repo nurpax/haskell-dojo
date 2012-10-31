@@ -11,6 +11,7 @@ executable jsontest
   build-depends:       base ==4.5.*
                      , containers
                      , parsec
+                     , json
 
   hs-source-dirs:      src
   main-is:             Main.hs
