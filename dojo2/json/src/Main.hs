@@ -1,6 +1,5 @@
 
 import           Control.Applicative
-import           Data.Maybe (fromMaybe)
 import qualified Data.Map as M
 import           Data.Maybe (fromMaybe)
 import           Text.JSON

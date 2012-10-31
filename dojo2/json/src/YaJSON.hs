@@ -32,7 +32,7 @@ data JSON =
 
 json =
   fmap JSONFloat (try float) <|>
-  fmap JSONInt (fmap fromIntegral integer) <|>
+  fmap (JSONInt . fromIntegral) integer <|>
   fmap JSONString (identifier <|> stringLiteral) <|>
   fmap (JSONDict . Map.fromList) (braces . commaSep $ pair) <|>
   fmap JSONList (brackets . commaSep $ json)
@@ -45,4 +45,4 @@ json =
       return (l, r)
 
 parseJson :: String -> Either ParseError JSON
-parseJson s = parse json "" s
+parseJson = parse json ""
