@@ -176,7 +176,7 @@ data Suit = Hearts | Spades | Diamonds | Clubs
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Using the {\em Types} module}
+\frametitle{Using your Types module}
 
 Let's use the new module in your \verb+Main+ module.  Replace your \verb+src/Main.hs+ with this:
 
@@ -207,7 +207,7 @@ Load ``Main.hs'' into ghci for interactive poking around.
 \bigskip
 
 Exercise 1.  Given the below list of Cards, count how many hearts are
-in it.
+in it?
 
 \begin{verbatim}
 h = Card Hearts
@@ -246,7 +246,7 @@ sum [1 | c <- cs, suit c == Hearts]
 \begin{frame}[fragile]
 \frametitle{HLint}
 
-HLint is a cool tool that'll do automatic code review on your code.
+HLint is a cool tool that'll automatically review your code.
 
 \bigskip
 Code shouldn't be put up for code review before it's been HLint'd.
