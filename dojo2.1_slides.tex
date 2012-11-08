@@ -198,4 +198,48 @@ Hearts
 \end{frame}
 %-----------------------------------------------------------------
 
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{A bit of practice}
+
+Load ``Main.hs'' into ghci for interactive poking around.
+
+\bigskip
+
+Exercise 1.  Given the below list of Cards, count how many hearts are
+in it.
+
+\begin{verbatim}
+h = Card Hearts
+s = Card Spades
+d = Card Diamonds
+c = Card Clubs
+
+cs :: [Card]
+cs = [d 3, d 2, h 4, h 3, s 1, h 5]
+\end{verbatim}
+
+
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Solutions}
+
+A few variants:
+
+{\small
+\begin{verbatim}
+length . filter (\s -> Hearts == suit s) $ cs
+
+foldr (\c acc -> acc + if suit c == Hearts then 1 else 0) 0 cs
+
+sum [1 | c <- cs, suit c == Hearts]
+\end{verbatim}
+}
+
+\end{frame}
+%-----------------------------------------------------------------
+
 \end{document}
