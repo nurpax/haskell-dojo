@@ -292,4 +292,70 @@ give you good Haskell coding tips.
 \end{frame}
 %-----------------------------------------------------------------
 
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Moving on..}
+
+On to parsing JSON..
+\bigskip
+
+Exercise project bots will be talking JSON with the server.  So how to
+parse it?
+
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Cards as JSON}
+
+Problem: how to turn strings like this:
+\bigskip
+
+{\small
+\begin{verbatim}
+{ "suit": "hearts", "rank": 1 }
+{ "suit": "spades", "rank": 2 }
+{ "suit": "diamonds", "rank": 3 }
+{ "suit": "clubs", "rank": 4 }
+\end{verbatim}
+}
+..into Haskell data:
+
+{\small
+\begin{verbatim}
+Card {suit = Hearts, rank = 1}
+Card {suit = Spades, rank = 2}
+Card {suit = Diamonds, rank = 3}
+Card {suit = Clubs, rank = 4}
+\end{verbatim}
+}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{How to go from a string to Haskell data?}
+
+Usually transformnig strings to data works like this:
+\begin{enumerate}
+\item Parse the string into an abstract syntax tree (AST)
+\item Walk the AST and construct a Haskell data structure out of the
+  AST nodes
+\end{enumerate}
+
+Both steps usually involve some type of data conversion and error
+checking.
+
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+% TODO show AST (Riku's JSON type)
+% TODO show his parser too, but don't go into details
+% TODO walk the tree to construct a Card
+
 \end{document}
