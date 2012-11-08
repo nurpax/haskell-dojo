@@ -242,4 +242,54 @@ sum [1 | c <- cs, suit c == Hearts]
 \end{frame}
 %-----------------------------------------------------------------
 
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{HLint}
+
+HLint is a cool tool that'll do automatic code review on your code.
+
+\bigskip
+Code shouldn't be put up for code review before it's been HLint'd.
+This resolves a lot of coding convention debates. :)
+
+\bigskip
+Installation:
+\begin{verbatim}
+cabal install hlint
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{HLint}
+
+Examples of things it can do:
+
+\begin{itemize}
+  \item Suggest better use of library functions
+  \item Point out unnecessary lambdas, parenthesis, do statements, etc.
+  \item Suggest monadic simplifications or generalizations (like
+    function composition, fmap, mapM vs mapM\_, etc.)
+\end{itemize}
+\bigskip
+
+It's good to get into the habit of using it to get your computer to
+give you good Haskell coding tips.
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{HLint, examples}
+
+\verbatiminput{hlint-ex.hs}
+
+\end{frame}
+%-----------------------------------------------------------------
+
 \end{document}
