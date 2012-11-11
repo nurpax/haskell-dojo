@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 
 import           Control.Applicative
 import qualified Data.Map as M
@@ -83,6 +84,36 @@ parseCardYaJSONImproved s =
       rank <- tryTakeInt "rank" d
       return $ Card suit rank
 
+
+------------------------------------------------------------------
+-- With typeclassses
+
+class FromJson a where
+  fromJson :: Y.JSON -> Either String a
+
+instance FromJson [Char] where
+  fromJson (Y.JSONString s) = Right s
+  fromJson _ = Left "fromJson: Expecting JSONString"
+
+instance FromJson Int where
+  fromJson (Y.JSONInt s) = Right s
+  fromJson _ = Left "fromJson: Expecting JSONInt"
+
+tryFromJson :: (FromJson a) => String -> M.Map String Y.JSON -> Either String a
+tryFromJson elt d = do
+  elt <- tryTakeElement elt d
+  fromJson elt
+
+-- Using the FromJson instance
+parseCardYaJSONTypeclasses :: String -> Either String Card
+parseCardYaJSONTypeclasses s =
+  either (Left . show) jsonToCard (Y.parseJson s)
+  where
+    jsonToCard (Y.JSONDict d) = do
+      suit <- tryFromJson "suit" d >>= toSuit
+      rank <- tryFromJson "rank" d
+      return $ Card suit rank
+
 ------------------------------------------------------------------
 
 -- Using the 'json' library
@@ -129,13 +160,19 @@ main :: IO ()
 main = do
   putStrLn "json outputs with YaJSON"
   mapM_ (print . parseCardYaJSON) testInputs
-  putStrLn "json outputs with YaJSON (improved)"
+  putStrLn "\njson outputs with YaJSON (improved)"
   mapM_ (print . parseCardYaJSONImproved) testInputs
-  putStrLn "demonstrate a few error cases"
+  putStrLn "\njson outputs with YaJSON (with typeclasses)"
+  mapM_ (print . parseCardYaJSONTypeclasses) testInputs
+  putStrLn "\ndemonstrate a few error cases"
   print $ parseCardYaJSONImproved testErr1
   print $ parseCardYaJSONImproved testErr2
   print $ parseCardYaJSONImproved testErr3
-  putStrLn "same with the 'json' library"
+  putStrLn "\ndemonstrate a few error cases (with typeclasses)"
+  print $ parseCardYaJSONTypeclasses testErr1
+  print $ parseCardYaJSONTypeclasses testErr2
+  print $ parseCardYaJSONTypeclasses testErr3
+  putStrLn "\nsame with the 'json' library"
   mapM_ (print . decodeCard) testInputs
   print $ decodeCard testErr1
   print $ decodeCard testErr2
