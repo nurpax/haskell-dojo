@@ -450,6 +450,43 @@ Right
 
 
 %-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Let's try walking the JSON type..}
+
+Exercise 2. Count how many JSONString "foo" elements are in
+\verb+["foo","bar","foo","baz",3,"foo"]+?
+
+{\small
+\begin{verbatim}
+> parseJson "[\"foo\",\"bar\",\"foo\",\"baz\",3,\"foo\"]"
+Right (JSONList [JSONString "foo",
+                 JSONString "bar",
+                 JSONString "foo",
+                 JSONString "baz",
+                 JSONInt 3,
+                 JSONString "foo"])
+\end{verbatim}
+}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Let's try walking the JSON type..}
+
+Let's move to Main.hs:
+
+{\small
+\verbatiminput{dojo2_ex2_main.hs}
+}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
 % TODO walk the tree to construct a Card
 
 \end{document}
