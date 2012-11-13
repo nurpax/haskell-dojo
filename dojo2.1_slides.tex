@@ -314,6 +314,243 @@ give you good Haskell coding tips.
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
+\frametitle{A few other fundamentals}
+
+A few basics before we move on to more complicated stuff.
+
+\begin{itemize}
+\item Types
+\item Maybe
+\item Either
+\item Coding conventions
+\end{itemize}
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Types}
+
+Haskell is a statically typed language.  It's also a very strongly
+typed language.
+\bigskip
+
+\begin{itemize}
+\item In Python, your errors will be caught at run-time
+\item In Haskell, you need to fix these to get code to compile before
+  you can run it
+\end{itemize}
+
+\bigskip
+Upside: Static typing enables you to write safer code and makes it
+easier to refactor, and it enables the compiler to make powerful
+optimizations on your code.
+
+\bigskip
+Downside: Working through type checker errors can be infuriating for
+beginners.
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Types - dealing with the type checker}
+
+You will probably forget this advice, or only ``get it'' with
+experience.  I'll say it anyway :)
+
+\begin{itemize}
+\item Don't fight the compiler with ``brute-force'' editing (Finnish:
+  ``kirjoitusvoima'')
+\item Look at the types (library functions, Hackage docs, read through
+  full module documentation.)
+\item Learn to understand what the compiler tells you!
+\end{itemize}
+\end{frame}
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Types - dealing with the type checker}
+
+Quoting from Brent Yorgey's excellent
+\href{http://www.haskell.org/haskellwiki/Typeclassopedia}{Typeclassopedia}:
+
+{\small
+\begin{quote}
+There are two keys to an expert Haskell hacker's wisdom:
+
+\begin{enumerate}
+\item Understand the types.
+\item Gain a deep intuition for each type class and its relationship
+  to other type classes, backed up by familiarity with many examples.
+\end{enumerate}
+
+It's impossible to overstate the importance of the first; the patient
+student of type signatures will uncover many profound
+secrets. Conversely, anyone ignorant of the types in their code is
+doomed to eternal uncertainty. ``Hmm, it doesn't compile ... maybe I'll
+stick in an fmap here ... nope, let's see ... maybe I need another (.)
+somewhere? ... um ...''
+\end{quote}
+}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{The Maybe type}
+
+Sometimes you need to signal with types that a computation doesn't
+return a value, or that you want to return an empty result in case of
+error.
+
+\bigskip
+Use the \verb+Maybe+ type for such situations.
+
+\bigskip
+It's kind of like the NULL pointer, except safer.  It's declared as:
+
+\begin{verbatim}
+data Maybe a = Nothing | Just a
+  deriving (Eq, Ord)
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{The Maybe type}
+Example usage:
+
+\bigskip
+
+Find an element from a list.  Use the Maybe type in the return type to
+make it explicit that you may not always find what you're looking for.
+
+\bigskip
+\begin{verbatim}
+-- Prelude Data.List> :t find
+find :: (a -> Bool) -> [a] -> Maybe a
+
+> find (== "usr") ["bar", "foo", "usr"]
+Just "usr"
+
+> find (== "xx") ["bar", "foo", "usr"]
+Nothing
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{The Maybe type}
+
+Also take a peek into the \verb+Data.Maybe+ module.  There's a lot of
+useful helper functions for working with Maybe values.
+\bigskip
+
+Examples:
+
+\begin{verbatim}
+Data.Maybe> :t fromMaybe
+fromMaybe :: a -> Maybe a -> a
+
+Data.Maybe> :t maybe
+maybe :: b -> (a -> b) -> Maybe a -> b
+
+-- Return default "N/A" if your element is not found
+> fromMaybe "N/A" . find (== "x") $ ["bar", "foo", "usr"]
+"N/A"
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{The Either type}
+
+\verb+Either+ is similar to \verb+Maybe+.  It's used as a return type
+for computations that can fail.
+
+\bigskip
+Unlike Maybe's ``value'' or ``nothing'', Either values are either
+\verb+Left+ (reason for failure) or \verb+Right+ (value of the
+computation).
+
+\bigskip
+Either is declared as:
+\bigskip
+\begin{verbatim}
+data Either a b = Left a | Right b
+  deriving (Eq, Ord, Read, Show)
+\end{verbatim}
+
+\bigskip
+{\em Mnemonic: "right" also means "correct"}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{The Either type}
+
+Examples of Either usage will come in later slides.
+\bigskip
+
+As for Maybe, see the \verb+Data.Either+ module for handy helper
+functions (esp. \verb+either+).
+
+\bigskip
+Both Maybe and Either have \verb+Monad+ instances declared for them.
+Monads can make working with Maybe and Either values very convenient
+while retaining the full safety of static typing.
+
+\end{frame}
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Coding conventions}
+
+\begin{itemize}
+\item \href{http://www.haskell.org/haskellwiki/Programming_guidelines}{Haskell wiki programming guidelines}
+\item Use hlint and \verb+ghc -Wall+
+\item Use more composition \verb+(.)+, less dollars \verb+($)+ (or the one dollar
+  per line rule)
+\end{itemize}
+
+\bigskip
+
+Dollars example:
+
+\begin{verbatim}
+Instead of:
+
+> sort $ map (+1) $ filter (/= 1) [3, 2, 1]
+> sort (map (+1) (filter (/= 1) [3, 2, 1]))
+
+use:
+
+> sort . map (+1) . filter (/= 1) $ [3, 2, 1]
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
 \frametitle{Moving on..}
 
 On to parsing JSON..
@@ -535,8 +772,8 @@ Your task is to implement \verb+countFoos :: JSON -> Int+
 
 Hints:
 \begin{itemize}
-\item You need to pattern match on \verb+JSONString+, \verb+JSONInt+, etc
-\item Count how many times you matched \verb+JSONString "foo"+
+\item You need to pattern match on \verb+JSONString+, \verb+JSONInt+, etc.
+\item Count how many times you matched \verb+JSONString "foo"+.
 \item You will probably recurse either with \verb+map+ or \verb+foldr+
   (see Data.List for foldr).
 \item Often you will also need some kind of an accumulator parameter
