@@ -3,7 +3,7 @@ map (\x -> x + 1)
 map (+1)
 
 map (\x -> not (null x))
--- found "\ x -> not (nill x)", why not "not . null"
+-- found "\ x -> not (null x)", why not "not . null"
 map (not . null)
 
 concat $ map escapeC s

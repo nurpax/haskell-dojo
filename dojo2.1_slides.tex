@@ -353,9 +353,103 @@ checking.
 \end{frame}
 %-----------------------------------------------------------------
 
+
 %-----------------------------------------------------------------
-% TODO show AST (Riku's JSON type)
-% TODO show his parser too, but don't go into details
+\begin{frame}[fragile]
+\frametitle{Let's practice!}
+
+\begin{enumerate}
+\item Add Riku's YaJSON module into your project \href{http://hpaste.org/77666}{http://hpaste.org/77666}
+(call it YaJSON.hs)
+\item Load YaJSON.hs into ghci
+\end{enumerate}
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Let's start with the JSON AST..}
+
+YaJSON JSON AST is declared as:
+
+\begin{verbatim}
+data JSON =
+    JSONFloat Double
+  | JSONInt Int
+  | JSONString String
+  | JSONDict (Map.Map String JSON)
+  | JSONList [JSON]
+    deriving (Eq, Ord, Show)
+\end{verbatim}
+
+..and the function to parse a String into JSON is
+
+\begin{verbatim}
+parseJson :: String -> Either ParseError JSON
+\end{verbatim}
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Let's try parsing..}
+
+{\small
+\begin{verbatim}
+data JSON =
+    JSONFloat Double
+  | JSONInt Int
+  | JSONString String
+  | JSONDict (Map.Map String JSON)
+  | JSONList [JSON]
+    deriving (Eq, Ord, Show)
+
+parseJson :: String -> Either ParseError JSON
+\end{verbatim}
+}
+
+\begin{verbatim}
+3
+foo
+{ "foo":3 }
+{ "suit":"diamonds", "rank":14 }
+[{ "foo":3 }, {"bar":4}]
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Let's try parsing..}
+
+{\small
+\begin{verbatim}
+*YaJSON> parseJson "3"
+Right (JSONInt 3)
+*YaJSON> parseJson "foo"
+Right (JSONString "foo")
+*YaJSON> parseJson "{ \"foo\":3 }"
+Right (JSONDict (fromList [("foo",JSONInt 3)]))
+
+*YaJSON> parseJson "{ \"suit\":\"diamonds\", \"rank\":14 }"
+Right (JSONDict (fromList [("rank",JSONInt 14),
+                           ("suit",JSONString "diamonds")]))
+
+*YaJSON> parseJson "[{ \"foo\":3 }, {\"bar\":4}]"
+Right
+  (JSONList
+    [JSONDict (fromList [("foo",JSONInt 3)]),
+     JSONDict (fromList [("bar",JSONInt 4)])])
+\end{verbatim}
+}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
 % TODO walk the tree to construct a Card
 
 \end{document}
