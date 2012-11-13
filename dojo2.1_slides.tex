@@ -544,6 +544,8 @@ countFoos json = go json 0
 \end{verbatim}
 }
 \end{frame}
+%-----------------------------------------------------------------
+
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
@@ -564,7 +566,32 @@ countFoos' json = go json 0
 }
 
 \end{frame}
+%-----------------------------------------------------------------
 
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Homework}
+
+Homework: Generalize \verb+countFoos+ to handle \verb+JSONDict+'s.
+E.g., how to count foos when the input contains nested arrays and
+dicts.
+
+\bigskip
+
+Example inputs:
+
+\begin{verbatim}
+[ "foo", bar, { foos: ["foo", "bar"] }, ["foo"]]
+-> 3
+[{"foo":["foo", "foo", "bar"]}, "foo", ["foo"]]
+-> 4
+[{"foo":{"foo":["foo", "bar"]}}, "foo", "bar"]
+-> 2
+\end{verbatim}
+
+
+\end{frame}
 %-----------------------------------------------------------------
 
 
