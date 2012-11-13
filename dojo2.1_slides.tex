@@ -161,16 +161,34 @@ Anything more complex than a ``hello world'' world app will have more
 than one module.  So let's try creating another module called {\em Types}.
 
 \bigskip
-Add a new file \verb+src/Types.hs+ with the following in it:
+Add a new file \verb+src/Types.hs+ with the following in it
+(\href{http://hpaste.org/77677}{http://hpaste.org/77677}):
 
+{\tiny
 \begin{verbatim}
 module Types (
     Suit(..)
+  , Card(..)
+  , Hand(..)
   ) where
 
-data Suit = Hearts | Spades | Diamonds | Clubs
+data Card = Card { suit :: Suit, rank :: Int } | Joker
     deriving (Show, Eq, Ord)
+
+data Hand =
+    RoyalFlush
+  | StraightFlush
+  | FourOfKind
+  | FullHouse
+  | Flush
+  | Straight
+  | ThreeOfKind
+  | TwoPairs
+  | Pair
+  | HighCard
+  deriving (Eq, Show)
 \end{verbatim}
+}
 
 \end{frame}
 
@@ -249,7 +267,8 @@ sum [1 | c <- cs, suit c == Hearts]
 HLint is a cool tool that'll automatically review your code.
 
 \bigskip
-Code shouldn't be put up for code review before it's been HLint'd.
+Code shouldn't be put up for code review unless it's been HLint'd.
+
 This resolves a lot of coding convention debates. :)
 
 \bigskip
@@ -272,7 +291,7 @@ Examples of things it can do:
   \item Suggest better use of library functions
   \item Point out unnecessary lambdas, parenthesis, do statements, etc.
   \item Suggest monadic simplifications or generalizations (like
-    function composition, fmap, mapM vs mapM\_, etc.)
+    function composition, \verb+fmap+, \verb+mapM+ vs \verb+mapM_+, etc.)
 \end{itemize}
 \bigskip
 
@@ -453,8 +472,12 @@ Right
 \begin{frame}[fragile]
 \frametitle{Let's try walking the JSON type..}
 
-Exercise 2. Count how many JSONString "foo" elements are in
-\verb+["foo","bar","foo","baz",3,"foo"]+?
+Exercise 2. Implement a function \verb+countFoos+ that counts how many
+JSONString "foo" elements are in a JSON response?
+
+\bigskip
+
+Example: \verb+["foo","bar","foo","baz",3,"foo"]+?
 
 {\small
 \begin{verbatim}
@@ -476,7 +499,7 @@ Right (JSONList [JSONString "foo",
 \begin{frame}[fragile]
 \frametitle{Let's try walking the JSON type..}
 
-Let's move to Main.hs:
+Skeleton \verb+Main.hs+ for the \verb+countFoos+ exercise:
 
 {\small
 \verbatiminput{dojo2_ex2_main.hs}
@@ -515,7 +538,9 @@ Hints:
 \item You need to pattern match on \verb+JSONString+, \verb+JSONInt+, etc
 \item Count how many times you matched \verb+JSONString "foo"+
 \item You will probably recurse either with \verb+map+ or \verb+foldr+
-  (see Data.List for foldr)
+  (see Data.List for foldr).
+\item Often you will also need some kind of an accumulator parameter
+  that you pass and return on recursive invocations.
 \item You can limit your solution to work with only \verb+JSONString+,
   \verb+JSONInt+, \verb+JSONList+.  We will deal with \verb+JSONDict+
   and others later.
@@ -534,13 +559,10 @@ Using \verb+sum . map+:
 {\small
 \begin{verbatim}
 countFoos :: JSON -> Int
-countFoos json = go json 0
-  where
-    go (JSONString "foo") acc = acc+1
-    go (JSONString _)     acc = acc
-    go (JSONInt _)        acc = acc
-    go (JSONList xs) acc =
-      sum . map (\x -> go x acc) $ xs
+countFoos (JSONString "foo") = 1
+countFoos (JSONString _)     = 0
+countFoos (JSONInt _)        = 0
+countFoos (JSONList xs)      = sum . map countFoos $ xs
 \end{verbatim}
 }
 \end{frame}
@@ -551,7 +573,8 @@ countFoos json = go json 0
 \begin{frame}[fragile]
 \frametitle{Solution: countFoos}
 
-Using \verb+foldr+:
+Using \verb+foldr+ and an accumulator parameter \verb+acc+ that models
+state:
 
 {\small
 \begin{verbatim}
