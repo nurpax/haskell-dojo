@@ -503,6 +503,72 @@ To print the number of "foo"s, you can start with something like:
 
 
 %-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Let's try walking the JSON type..}
+
+Your task is to implement \verb+countFoos :: JSON -> Int+
+
+\bigskip
+
+Hints:
+\begin{itemize}
+\item You need to pattern match on \verb+JSONString+, \verb+JSONInt+, etc
+\item Count how many times you matched \verb+JSONString "foo"+
+\item You will probably recurse either with \verb+map+ or \verb+foldr+
+  (see Data.List for foldr)
+\item You can limit your solution to work with only \verb+JSONString+,
+  \verb+JSONInt+, \verb+JSONList+.  We will deal with \verb+JSONDict+
+  and others later.
+\end{itemize}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Solution: countFoos}
+
+Using \verb+sum . map+:
+
+{\small
+\begin{verbatim}
+countFoos :: JSON -> Int
+countFoos json = go json 0
+  where
+    go (JSONString "foo") acc = acc+1
+    go (JSONString _)     acc = acc
+    go (JSONInt _)        acc = acc
+    go (JSONList xs) acc =
+      sum . map (\x -> go x acc) $ xs
+\end{verbatim}
+}
+\end{frame}
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Solution: countFoos}
+
+Using \verb+foldr+:
+
+{\small
+\begin{verbatim}
+countFoos' :: JSON -> Int
+countFoos' json = go json 0
+  where
+    go (JSONString "foo") acc = acc+1
+    go (JSONString _)     acc = acc
+    go (JSONInt _)        acc = acc
+    go (JSONList xs)      acc = foldr go acc xs
+\end{verbatim}
+}
+
+\end{frame}
+
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
 % TODO walk the tree to construct a Card
 
 \end{document}
