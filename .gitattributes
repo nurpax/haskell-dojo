@@ -1,0 +1,4 @@
+* text=auto
+*.hs text
+*.cabal text
+*.tex text
