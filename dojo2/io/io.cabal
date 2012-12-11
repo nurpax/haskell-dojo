@@ -1,0 +1,33 @@
+name:                iotest
+version:             0.1.0.0
+synopsis:            IO dojo examples
+author:              Janne Hellsten
+maintainer:          jjhellst@gmail.com
+build-type:          Simple
+cabal-version:       >=1.8
+
+library
+  build-depends:       base ==4.5.*
+                     , containers
+                     , json
+  hs-source-dirs:      lib
+  Exposed-modules:     Types
+
+executable server
+  build-depends:       base ==4.5.*
+                     , containers
+                     , network
+                     , random
+                     , iotest
+
+  hs-source-dirs:      server
+  main-is:             Server.hs
+
+executable client
+  build-depends:       base ==4.5.*
+                     , containers
+                     , network
+                     , iotest
+
+  hs-source-dirs:      client
+  main-is:             Client.hs
