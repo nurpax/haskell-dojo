@@ -1,12 +1,17 @@
 
 module Types (
-    Suit(..)
-  , Card(..)
+    Card(..)
+  , Suit(..)
+  , Player(..)
   , decodeCard
+  , decodePlayer
   ) where
 
 import           Control.Applicative
 import           Text.JSON
+
+data Player = Player { playerName :: String }
+    deriving (Show, Eq, Ord)
 
 data Suit = Hearts | Spades | Diamonds | Clubs
     deriving (Show, Eq, Ord)
@@ -40,5 +45,19 @@ instance JSON Card where
     where
       toSuitJSON s = either Error Ok (toSuit s)
 
+
+instance JSON Player where
+  showJSON p =
+    makeObj [("name", showJSON . playerName $ p)]
+
+  readJSON object = do
+    obj <- readJSON object
+    Player <$> (valFromObj "name" obj)
+    where
+      toSuitJSON s = either Error Ok (toSuit s)
+
 decodeCard :: String -> Either String Card
 decodeCard = resultToEither . decode
+
+decodePlayer :: String -> Either String Player
+decodePlayer = resultToEither . decode

@@ -26,14 +26,21 @@ drawCard (ServerState rnd [])     = (head cards, ServerState rnd' (tail cards))
       return $ Card st rn
 
 
-handleConn :: MVar ServerState -> (Handle, HostName, PortNumber) -> IO ()
-handleConn stateMVar (h, hostname, port) = do
+respondToClient :: MVar ServerState -> Handle -> Player -> IO ()
+respondToClient stateMVar h player = do
   state <- takeMVar stateMVar
   let (card, state') = drawCard state
   putMVar stateMVar state'
-  hSetBuffering h NoBuffering
+  putStrLn $ "player " ++ playerName player ++ " connected"
+  hPutStrLn h $ encode card
+
+handleConn :: MVar ServerState -> (Handle, HostName, PortNumber) -> IO ()
+handleConn stateMVar (h, hostname, port) = do
+  hSetBuffering h LineBuffering
   putStrLn ("Accepted connection from " ++ hostname ++ " port " ++ show port)
-  hPutStr h $ encode card
+  -- Ask the client for its player struct
+  clientDesc <- fmap decodePlayer (hGetLine h)
+  either (return . const ()) (respondToClient stateMVar h) clientDesc
   hClose h
 
 
