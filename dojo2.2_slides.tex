@@ -40,6 +40,7 @@ Links:
 \begin{itemize}
   \item \href{https://github.com/nurpax/haskell-dojo/wiki/Haskell-Dojo-\%232}{Dojo wiki}
   \item \href{https://github.com/nurpax/haskell-dojo/wiki/Further-reading}{Further reading}
+  \item \href{http://www.haskell.org/haskellwiki/Roll_your_own_IRC_bot}{Roll your own IRC bot}
 \end{itemize}
 
 \end{frame}
@@ -268,7 +269,8 @@ toList (Node v l r) = toList l ++ [v] ++ toList r
 \begin{frame}[fragile]
 \frametitle{IO in Haskell}
 
-TODO intro, monad, etc, some basic functions
+TODO intro, monad, etc, some basic functions (readFile, writeFile,
+putStrLn, print, readProcess, mapM, mapM\_, forever, etc.)
 
 \end{frame}
 %-----------------------------------------------------------------
@@ -344,13 +346,13 @@ A very informal description of the expected server/client protocol:
 \begin{itemize}
   \item The server listens for new connections on port 4242
   \item On new connection, the server forks a thread that handles the
-    client request (freeing up the main thread for accepting new
-    incoming connections)
+    client request (freeing up the main thread to accept new incoming
+    connections)
   \item The client sends the server its \verb+Player+ info as
     JSON.  (See the \verb+Types+ module.)
-  \item The server reads the \verb+Player+ JSON response, decodes it a
-    Haskell \verb+Player+, draws a random card, encodes it to JSON and
-    sends it to the client.
+  \item The server reads the \verb+Player+ JSON response, decodes it,
+    draws a random card, encodes the card to JSON and sends it to the
+    client.
   \item The client gets the server response and can decode the JSON
     string into a \verb+Card+ with \verb+decodeCard+.
 \end{itemize}
@@ -361,9 +363,7 @@ A very informal description of the expected server/client protocol:
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Example Networking Project}
-
-Let's try it!
+\frametitle{Example Networking Project - Let's try it!}
 
 {\small
 \begin{verbatim}
