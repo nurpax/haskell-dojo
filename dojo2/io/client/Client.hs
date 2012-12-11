@@ -1,16 +1,16 @@
 
-import Control.Exception (bracket)
 import Network
+import Text.JSON
 import System.IO
+
+import Types
 
 server = "localhost"
 port   = 4242
 
 main :: IO ()
 main = do
-  bracket (connectTo server (PortNumber (fromIntegral port))) hClose run
-  where
-    run h = do
-      hSetBuffering h NoBuffering
-      t <- hGetContents h
-      putStrLn $ "server sez: " ++ t
+  putStrLn "IMPLEMENT CONNECTION"
+  -- TODO change your player struct
+  print $ Player "Jope"
+  putStrLn . encode . Player $ "Jope"
