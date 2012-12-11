@@ -52,7 +52,7 @@ instance JSON Player where
 
   readJSON object = do
     obj <- readJSON object
-    Player <$> (valFromObj "name" obj)
+    Player <$> valFromObj "name" obj
     where
       toSuitJSON s = either Error Ok (toSuit s)
 
