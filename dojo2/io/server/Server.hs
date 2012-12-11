@@ -1,5 +1,6 @@
 
 import Control.Concurrent
+import Control.Exception (try)
 import Control.Monad (forever)
 import Network
 import System.IO
@@ -39,9 +40,14 @@ handleConn stateMVar (h, hostname, port) = do
   hSetBuffering h LineBuffering
   putStrLn ("Accepted connection from " ++ hostname ++ " port " ++ show port)
   -- Ask the client for its player struct
-  clientDesc <- fmap decodePlayer (hGetLine h)
-  either (return . const ()) (respondToClient stateMVar h) clientDesc
+  line <- try (hGetLine h) :: IO (Either IOError String)
+  either (\e -> putStrLn $ "Ignoring error: " ++ show e)
+         (respondToClient stateMVar h)
+         (decodeLine line)
   hClose h
+  where
+    decodeLine (Left e) = Left . show $ e
+    decodeLine (Right line) = decodePlayer line
 
 
 main :: IO ()
