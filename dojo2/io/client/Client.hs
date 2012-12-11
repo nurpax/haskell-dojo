@@ -20,6 +20,6 @@ main = do
       hSetBuffering h LineBuffering
       hPutStrLn h $ encode player
       card <- fmap decodeCard (hGetContents h)
-      either (\e -> putStrLn $ "error: " ++ show e)
+      either (error . show)
              (\c -> putStrLn $ "got card: " ++ show c)
              card
