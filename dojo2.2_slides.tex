@@ -262,4 +262,94 @@ toList (Node v l r) = toList l ++ [v] ++ toList r
 \end{frame}
 %-----------------------------------------------------------------
 
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{IO in Haskell}
+
+TODO intro, monad, etc, some basic functions
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Practice}
+
+We have:
+
+\begin{itemize}
+  \item JSON serialization for the \verb+Card+ type
+  \item A server at port 4242 that serves random cards and sends them
+    as JSON
+\end{itemize}
+
+We will implement a client that talks to the server over a socket.
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Networking}
+
+Get the networking skeleton and build it:
+
+\begin{verbatim}
+$ git clone git://github.com/nurpax/haskell-dojo
+$ cd haskell-dojo/dojo2/io
+$ cabal-dev install
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Networking}
+
+Let's try it!
+
+{\small
+\begin{verbatim}
+$ ./cabal-dev/bin/server
+# in another window..
+$ telnet localhost 4242
+\end{verbatim}
+}
+
+Response:
+
+{\small
+\begin{verbatim}
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+\end{verbatim}
+}
+
+Send the server your client info by typing the following into the telnet window:
+
+{\small
+\begin{verbatim}
+{"name":"Jope"}
+\end{verbatim}
+}
+
+Response:
+
+{\small
+\begin{verbatim}
+{"suit":"clubs","rank":11}
+Connection closed by foreign host.
+\end{verbatim}
+}
+
+\end{frame}
+%-----------------------------------------------------------------
+
 \end{document}
