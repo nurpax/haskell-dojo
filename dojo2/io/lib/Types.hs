@@ -3,7 +3,6 @@ module Types (
     Suit(..)
   , Card(..)
   , decodeCard
-  , encodeCard
   ) where
 
 import           Control.Applicative
@@ -43,6 +42,3 @@ instance JSON Card where
 
 decodeCard :: String -> Either String Card
 decodeCard = resultToEither . decode
-
-encodeCard :: Card -> String
-encodeCard = encode

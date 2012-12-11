@@ -4,6 +4,7 @@ import Control.Monad (forever)
 import Network
 import System.IO
 import System.Random
+import Text.JSON (encode)
 
 import Types
 import Util
@@ -32,7 +33,7 @@ handleConn stateMVar (h, hostname, port) = do
   putMVar stateMVar state'
   hSetBuffering h NoBuffering
   putStrLn ("Accepted connection from " ++ hostname ++ " port " ++ show port)
-  hPutStr h $ encodeCard card
+  hPutStr h $ encode card
   hClose h
 
 

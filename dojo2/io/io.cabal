@@ -16,6 +16,7 @@ library
 executable server
   build-depends:       base ==4.5.*
                      , containers
+                     , json
                      , network
                      , random
                      , iotest
@@ -26,6 +27,7 @@ executable server
 executable client
   build-depends:       base ==4.5.*
                      , containers
+                     , json
                      , network
                      , iotest
 
