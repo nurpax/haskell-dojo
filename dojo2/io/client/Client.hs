@@ -13,7 +13,7 @@ player :: Player
 player = Player "Jopex"
 
 main :: IO ()
-main = do
+main =
   bracket (connectTo server (PortNumber (fromIntegral port))) hClose run
   where
     run h = do
