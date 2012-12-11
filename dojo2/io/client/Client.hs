@@ -1,6 +1,6 @@
 
-import Control.Exception (bracket)
 import Network
+import Text.JSON
 import System.IO
 import Text.JSON
 
