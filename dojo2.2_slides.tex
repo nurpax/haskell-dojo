@@ -294,7 +294,7 @@ We will implement a client that talks to the server over a socket.
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Networking}
+\frametitle{Example Networking Project}
 
 Get the networking skeleton and build it:
 
@@ -310,7 +310,58 @@ $ cabal-dev install
 
 %-----------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Networking}
+\frametitle{Project outline}
+
+Common code for client/server, contains data declarations for Card and
+Player along with JSON encode and decode functionality:
+
+\begin{verbatim}
+lib/Types.hs
+\end{verbatim}
+
+Server implementation:
+
+\begin{verbatim}
+server/Server.hs
+server/Util.hs
+\end{verbatim}
+
+For you to implement:
+
+\begin{verbatim}
+client/Client.hs
+\end{verbatim}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Server/client protocol}
+
+A very informal description of the expected server/client protocol:
+
+\begin{itemize}
+  \item The server listens for new connections on port 4242
+  \item On new connection, the server forks a thread that handles the
+    client request (freeing up the main thread for accepting new
+    incoming connections)
+  \item The client sends the server its \verb+Player+ info as
+    JSON.  (See the \verb+Types+ module.)
+  \item The server reads the \verb+Player+ JSON response, decodes it a
+    Haskell \verb+Player+, draws a random card, encodes it to JSON and
+    sends it to the client.
+  \item The client gets the server response and can decode the JSON
+    string into a \verb+Card+ with \verb+decodeCard+.
+\end{itemize}
+
+\end{frame}
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Example Networking Project}
 
 Let's try it!
 
