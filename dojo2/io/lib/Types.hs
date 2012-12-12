@@ -3,7 +3,7 @@ module Types (
     Card(..)
   , Suit(..)
   , ClientReq(..)
-  , decodeCard
+  , decodeCards
   , decodeClientReq
   ) where
 
@@ -57,8 +57,8 @@ instance JSON ClientReq where
     where
       toSuitJSON s = either Error Ok (toSuit s)
 
-decodeCard :: String -> Either String Card
-decodeCard = resultToEither . decode
+decodeCards :: String -> Either String [Card]
+decodeCards = resultToEither . decode
 
 decodeClientReq :: String -> Either String ClientReq
 decodeClientReq = resultToEither . decode
