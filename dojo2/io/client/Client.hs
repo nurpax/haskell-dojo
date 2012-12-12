@@ -11,6 +11,6 @@ port   = 4242
 main :: IO ()
 main = do
   putStrLn "IMPLEMENT CONNECTION"
-  -- TODO change your player struct
-  print $ Player "Jope"
-  putStrLn . encode . Player $ "Jope"
+  -- TODO change name in your request struct
+  print (ClientReq "Jope" 3)
+  putStrLn . encode $ ClientReq "Jope" 3

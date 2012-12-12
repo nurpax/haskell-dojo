@@ -27,13 +27,13 @@ drawCard (ServerState rnd [])     = (head cards, ServerState rnd' (tail cards))
       return $ Card st rn
 
 
-respondToClient :: MVar ServerState -> Handle -> Player -> IO ()
+respondToClient :: MVar ServerState -> Handle -> ClientReq -> IO ()
 respondToClient stateMVar h player = do
   state <- takeMVar stateMVar
   let (card, state') = drawCard state
   putMVar stateMVar state'
-  putStrLn $ "player " ++ playerName player ++ " connected"
-  hPutStrLn h $ encode card
+  putStrLn $ "player " ++ crPlayerName player ++ " connected"
+  hPutStrLn h $ encode [card]
 
 handleConn :: MVar ServerState -> (Handle, HostName, PortNumber) -> IO ()
 handleConn stateMVar (h, hostname, port) = do
@@ -47,7 +47,7 @@ handleConn stateMVar (h, hostname, port) = do
   hClose h
   where
     decodeLine (Left e) = Left . show $ e
-    decodeLine (Right line) = decodePlayer line
+    decodeLine (Right line) = decodeClientReq line
 
 
 main :: IO ()

@@ -2,16 +2,18 @@
 module Types (
     Card(..)
   , Suit(..)
-  , Player(..)
+  , ClientReq(..)
   , decodeCard
-  , decodePlayer
+  , decodeClientReq
   ) where
 
 import           Control.Applicative
 import           Text.JSON
 
-data Player = Player { playerName :: String }
-    deriving (Show, Eq, Ord)
+data ClientReq = ClientReq {
+    crPlayerName :: String
+  , crNCards :: Int
+  } deriving (Show, Eq, Ord)
 
 data Suit = Hearts | Spades | Diamonds | Clubs
     deriving (Show, Eq, Ord)
@@ -46,18 +48,19 @@ instance JSON Card where
       toSuitJSON s = either Error Ok (toSuit s)
 
 
-instance JSON Player where
+instance JSON ClientReq where
   showJSON p =
-    makeObj [("name", showJSON . playerName $ p)]
+    makeObj [ ("name",   showJSON . crPlayerName $ p)
+            , ("nCards", showJSON . crNCards $ p)]
 
   readJSON object = do
     obj <- readJSON object
-    Player <$> valFromObj "name" obj
+    ClientReq <$> valFromObj "name" obj <*> valFromObj "nCards" obj
     where
       toSuitJSON s = either Error Ok (toSuit s)
 
 decodeCard :: String -> Either String Card
 decodeCard = resultToEither . decode
 
-decodePlayer :: String -> Either String Player
-decodePlayer = resultToEither . decode
+decodeClientReq :: String -> Either String ClientReq
+decodeClientReq = resultToEither . decode
