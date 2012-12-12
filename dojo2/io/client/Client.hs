@@ -12,5 +12,5 @@ main :: IO ()
 main = do
   putStrLn "IMPLEMENT CONNECTION"
   -- TODO change name in your request struct
-  print (ClientReq "Jope" 3)
-  putStrLn . encode $ ClientReq "Jope" 3
+  print (ClientReq "Jope")
+  putStrLn . encode $ ClientReq "Jope"

@@ -12,7 +12,6 @@ import           Text.JSON
 
 data ClientReq = ClientReq {
     crPlayerName :: String
-  , crNCards :: Int
   } deriving (Show, Eq, Ord)
 
 data Suit = Hearts | Spades | Diamonds | Clubs
@@ -50,12 +49,11 @@ instance JSON Card where
 
 instance JSON ClientReq where
   showJSON p =
-    makeObj [ ("name",   showJSON . crPlayerName $ p)
-            , ("nCards", showJSON . crNCards $ p)]
+    makeObj [ ("name",   showJSON . crPlayerName $ p) ]
 
   readJSON object = do
     obj <- readJSON object
-    ClientReq <$> valFromObj "name" obj <*> valFromObj "nCards" obj
+    ClientReq <$> valFromObj "name" obj
     where
       toSuitJSON s = either Error Ok (toSuit s)
 

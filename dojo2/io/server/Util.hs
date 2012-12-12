@@ -1,8 +1,11 @@
 
 module Util (
-  fisherYates) where
+    fisherYates
+  , note
+  , readInt) where
 
 import Data.Map hiding (foldl)
+import Data.Maybe (listToMaybe)
 import System.Random
 
 fisherYatesStep :: RandomGen g => (Map Int a, g) -> (Int, a) -> (Map Int a, g)
@@ -18,3 +21,12 @@ fisherYates gen l =
     toElems (x, y) = (elems x, y)
     numerate = zip [1..]
     initial x gen = (singleton 0 x, gen)
+
+note :: String -> Maybe a -> Either String a
+note s Nothing  = Left s
+note _ (Just a) = Right a
+
+readInt :: String -> Either String Int
+readInt s =
+  note "failed int decode" $ (fmap fst . listToMaybe . reads $ s)
+
